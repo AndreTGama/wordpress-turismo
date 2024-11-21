@@ -1,0 +1,196 @@
+#header {
+    background-image: url('../images/paraty-sono.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+}
+
+.overlay {
+    background-image: linear-gradient(
+        180deg,
+        #000000 0%,
+        rgba(242, 41, 91, 0) 100%
+    );
+    opacity: 0.7;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+.overlay-left {
+    background-image: linear-gradient(
+        270deg,
+        #2f00ff 0%,
+        rgba(242, 41, 91, 0) 100%
+    );
+    opacity: 0.7;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+.position-relative {
+    position: relative;
+}
+.position-bottom {
+    bottom: -1px;
+}
+
+.position-top {
+    top: -1px;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+.shape {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    line-height: 0;
+    direction: ltr;
+}
+
+.shape-svg {
+    width: calc(113% + 1.3px);
+    display: block;
+    width: calc(100% + 1.3px);
+    position: relative;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.shape-fill-white {
+    fill: rgb(245, 245, 245);
+}
+
+.shape-fill {
+    fill: rgb(245, 245, 245);
+    -webkit-transform-origin: center;
+    -ms-transform-origin: center;
+    transform-origin: center;
+    -webkit-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+}
+
+#offers {
+    margin-top: 50px;
+}
+
+#count-section {
+    margin-top: 50px;
+    background-image: url('../images/paraty-de-cima.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.position {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.background-overlay {
+    background-color: #000000;
+    opacity: 0.4;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+
+#count {
+    padding: 0 5%;
+    margin-top: 30px;
+}
+
+.count-cards {
+    display: flex;
+    justify-content: center;
+}
+
+.double-card-count {
+    display: flex;
+    justify-content: space-between;
+}
+
+.double-card-count .card-count {
+    width: 150px;
+    height: 100px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(193, 192, 192, 0.28); /* #c1c0c047 em rgba */
+    border: 2px solid #dfdfdf;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.double-card-count .card-count .value {
+    color: #ffd700;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.double-card-count .card-count .description {
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .double-card-count {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 384px) {
+    #count {
+        flex-direction: column;
+    }
+}
+
+#division {
+    margin-top: 50px;
+    background-image: url('../images/cidade-paraty-centro.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 30vh;
+}
+
+#contact {
+    margin-top: 50px;
+    background: linear-gradient(
+            135deg,
+            rgba(40, 118, 167, .9) 70%,
+            rgba(65, 172, 226, .9) 55%
+        ),
+        url('../images/cidade-paraty-centro.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    color: white;
+}

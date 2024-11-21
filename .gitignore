@@ -1,0 +1,46 @@
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de log e backups
+*.log
+*.sql
+*.sqlite
+*.tar.gz
+*.zip
+
+# Configuração do servidor
+wp-config.php
+
+# Diretórios principais do WordPress
+/wp-admin
+/wp-includes
+/wp-content/uploads/
+/wp-content/upgrade/
+/wp-content/cache/
+/wp-content/backups/
+
+# Plugins e temas específicos
+# Descomente abaixo para ignorar plugins e temas individuais
+#/wp-content/plugins/plugin-name/
+#/wp-content/themes/theme-name/
+
+# Ferramentas e dependências locais
+node_modules/
+vendor/
+
+# Arquivos de controle do Composer e NPM
+composer.lock
+package-lock.json
+yarn.lock
+
+# Configurações do ambiente local
+.env
+.env.*
+
+# Arquivos do editor e IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*.bak

@@ -1,0 +1,20 @@
+.underline-effect {
+    position: relative;
+    color: inherit;
+}
+
+.underline-effect::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background-color: #029344;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.underline-effect:hover::before {
+    width: 100%;
+}

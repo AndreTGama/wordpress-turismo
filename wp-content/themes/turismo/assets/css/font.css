@@ -1,0 +1,111 @@
+.font-navbar {
+    font-style: normal;
+    font-weight: 900;
+    font-size: 12px;
+    line-height: 1.4;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0px;
+}
+
+.font-title-small {
+    font-style: normal;
+    line-height: 1.4;
+    letter-spacing: 0px;
+    position: relative;
+    font-family: 'Lato', Sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+}
+
+.font-shadow {
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.font-title-big {
+    font-style: normal;
+    line-height: 1.4;
+    letter-spacing: 0px;
+    color: white;
+    position: relative;
+    font-family: 'Lato', Sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.font-badge {
+    letter-spacing: 0px;
+    font-weight: bold;
+    color: white;
+    font-family: 'Lato', Sans-serif;
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.font-header-title {
+    font-style: normal;
+    line-height: 1.4;
+    letter-spacing: 0px;
+    color: white;
+    position: relative;
+    font-family: 'Lato', Sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.font-header-description {
+    font-family: 'Lato', sans-serif;
+    color: white;
+    font-size: 1rem;
+    position: relative;
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.font-offers-title {
+    font-family: 'Lato', Sans-serif;
+    font-size: 36px;
+    font-weight: 400;
+    text-transform: none;
+    font-style: normal;
+    text-decoration: none;
+}
+
+.font-offers-description {
+    font-family: 'Lato', Sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #aaaaaa;
+}
+
+.font-counts-title {
+    font-family: 'Lato', Sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #aaaaaa;
+}
+
+.font-counts-description {
+    font-family: 'Lato', sans-serif;
+    color: white;
+    font-size: 1rem;
+    position: relative;
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.font-about-us-title {
+    font-family: 'Lato', Sans-serif;
+    font-size: 36px;
+    font-weight: 400;
+    text-transform: none;
+    font-style: normal;
+    text-decoration: none;
+}
+
+.font-about-us-description {
+    font-family: 'Lato', Sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    text-transform: none;
+    font-style: normal;
+    text-decoration: none;
+}
