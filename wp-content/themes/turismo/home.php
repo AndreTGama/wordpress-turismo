@@ -4,6 +4,38 @@
  * Template Name: Home
  */
 get_header();
+
+$argsTours = array(
+    'post_type'      => 'servicos',
+    'posts_per_page' => 4,
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+);
+
+$tours = get_posts($argsTours);
+$toursArray = [];
+
+foreach ($tours as $tour) {
+    $images = get_field('pictures', $tour->ID);
+    $gallery = [];
+    if (!empty($images) && is_array($images)) {
+        foreach ($images as $image) {
+            $gallery[] = $image['url'] ?? '';
+        }
+    }
+
+    $trip = [
+        "id" => $tour->ID,
+        "name" => get_field('name', $tour->ID) ?? $tour->post_title,
+        "description" => get_field('description', $tour->ID) ?? '',
+        "images" => $gallery,
+        "img" => $gallery[0] ?? '',
+        "link" => home_url('/servicos/' . $tour->post_name),
+    ];
+
+    array_push($toursArray, $trip);
+}
+
 ?>
 <section id="header" class="flex flex-col md:flex-row gap-8 p-6 position-relative ">
     <div class="overlay"></div>
@@ -51,79 +83,34 @@ get_header();
 </section>
 <section id="offers">
     <div class="flex-1 flex flex-col items-center justify-center text-center">
-        <h1 class="font-offers-title">
-            Melhores ofertas
-        </h1>
-        <h2 class="font-offers-description">
-            Melhores ofertas
-        </h2>
+        <h1 class="font-offers-title">Serviços Recentes</h1>
+        <h2 class="font-offers-description">Descubra os nossos pacotes de viagens mais recentes</h2>
     </div>
     <div class="mt-6 text-center">
         <div class="flex flex-wrap items-center justify-center text-center">
-            <div class="max-w-64 bg-white mx-2 mb-4 rounded-lg hover:shadow">
-                <a href="#">
-                    <img
-                        src="<?php echo get_template_directory_uri(); ?>/assets/images/paraty-sono.png"
-                        alt="Uma descrição da imagem"
-                        class="rounded-t-lg shadow-md" />
-                </a>
-                <div class="p-5">
-                    <a href="#">
-                        <h5 class="mb-2 font-bold tracking-tight text-dark-900">
-                            Noteworthy technology acquisitions 2021
-                        </h5>
+            <?php foreach ($toursArray as $tour): ?>
+                <div class="max-w-64 bg-white mx-2 mb-4 rounded-lg hover:shadow">
+                    <a href="<?php echo esc_url($tour['link']); ?>">
+                        <img
+                            src="<?php echo esc_url($tour['img']); ?>"
+                            alt="<?php echo esc_attr($tour['name']); ?>"
+                            class="w-full h-40 rounded-t-lg shadow-md" />
                     </a>
+                    <div class="p-5">
+                        <a href="<?php echo esc_url($tour['link']); ?>">
+                            <h5 class="mb-2 font-bold tracking-tight text-dark-900">
+                                <?php echo esc_html($tour['name']); ?>
+                            </h5>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="max-w-64 bg-white mx-2 mb-4 rounded-lg hover:shadow">
-                <a href="#">
-                    <img
-                        src="<?php echo get_template_directory_uri(); ?>/assets/images/paraty-sono.png"
-                        alt="Uma descrição da imagem"
-                        class="rounded-t-lg shadow-md" />
-                </a>
-                <div class="p-5">
-                    <a href="#">
-                        <h5 class="mb-2 font-bold tracking-tight text-dark-900">
-                            Noteworthy technology acquisitions 2021
-                        </h5>
-                    </a>
-                </div>
-            </div>
-            <div class="max-w-64 bg-white mx-2 mb-4 rounded-lg hover:shadow">
-                <a href="#">
-                    <img
-                        src="<?php echo get_template_directory_uri(); ?>/assets/images/paraty-sono.png"
-                        alt="Uma descrição da imagem"
-                        class="rounded-t-lg shadow-md" />
-                </a>
-                <div class="p-5">
-                    <a href="#">
-                        <h5 class="mb-2 font-bold tracking-tight text-dark-900">
-                            Noteworthy technology acquisitions 2021
-                        </h5>
-                    </a>
-                </div>
-            </div>
-            <div class="max-w-64 bg-white mx-2 mb-4 rounded-lg hover:shadow">
-                <a href="#">
-                    <img
-                        src="<?php echo get_template_directory_uri(); ?>/assets/images/paraty-sono.png"
-                        alt="Uma descrição da imagem"
-                        class="rounded-t-lg shadow-md" />
-                </a>
-                <div class="p-5">
-                    <a href="#">
-                        <h5 class="mb-2 font-bold tracking-tight text-dark-900">
-                            Noteworthy technology acquisitions 2021
-                        </h5>
-                    </a>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
-        <button class="bg-green text-white font-bold py-2 px-4 rounded">
-            Ver mais
-        </button>
+        <a
+            href="/servicos"
+            class="mt-4 bg-green text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition duration-300">
+            Ver todos
+        </a>
     </div>
 </section>
 <section id="count-section" class="position-relative">
