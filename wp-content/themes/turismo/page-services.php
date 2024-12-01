@@ -5,15 +5,14 @@
  */
 get_header();
 
-// Paginacao
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 $argsTours = array(
     'post_type'      => 'servicos',
-    'posts_per_page' => 1,
+    'posts_per_page' => 1, // Pode ser ajustado para o número de posts por página que você deseja
     'orderby'        => 'date',
     'order'          => 'DESC',
-    'paged'          => $paged,
+    'paged'          => $paged, // A paginação está sendo aplicada corretamente aqui
 );
 
 // Query de serviços
@@ -98,26 +97,22 @@ endif;
         <!-- Paginação -->
         <div id="pagination" class="text-center mt-6">
             <?php
-            $big = 999999999; // Não pode ser 0
+            $big = 999999999;
             $pagination_links = paginate_links([
                 'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
-                'format' => '?paged=%#%',
+                'format' => 'page/%#%',
                 'current' => max(1, get_query_var('paged')),
                 'total' => $toursQuery->max_num_pages,
                 'prev_text' => 'Anterior',
                 'next_text' => 'Próximo',
-                'type' => 'array',  // Mudando para array para poder customizar
+                'type' => 'array',
             ]);
 
-            // Verifica se existem links de paginação
             if ($pagination_links) :
                 echo '<div class="pagination flex justify-center gap-2">';
-
                 foreach ($pagination_links as $link) :
-                    // Customizando os links como botões
                     echo '<button class="pagination-btn bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">' . $link . '</button>';
                 endforeach;
-
                 echo '</div>';
             endif;
             ?>
