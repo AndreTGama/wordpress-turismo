@@ -183,8 +183,8 @@
     margin-top: 50px;
     background: linear-gradient(
             135deg,
-            rgba(40, 118, 167, .9) 70%,
-            rgba(65, 172, 226, .9) 55%
+            rgba(40, 118, 167, 0.9) 70%,
+            rgba(65, 172, 226, 0.9) 55%
         ),
         url('../images/cidade-paraty-centro.png');
     background-position: center center;
@@ -193,4 +193,21 @@
     width: 100%;
     height: 100%;
     color: white;
+}
+
+.contact-form {
+    background-color: white;
+    color: #090909;
+    padding: 15px 20px 10px 25px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px gray solid;
+}
+
+.wpforms-field-container input, textarea {
+    border: 1px rgb(189, 189, 189) solid !important;
+    border-radius: 5px !important;
+    padding: 5px !important;
+    width: 100% !important;
+    margin-top: 5px !important;
 }

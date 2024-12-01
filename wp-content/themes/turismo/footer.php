@@ -45,10 +45,19 @@ $message = get_field('message', $contact[0]->ID);
 		<div class="flex flex-col mb-4 md:mb-0 text-center md:text-left">
 			<h3 class="text-lg font-semibold mb-2">Mapa do Site</h3>
 			<ul class="flex flex-col items-center md:items-start">
-				<li><a href="#section1" class="hover:text-gray-400">Seção 1</a></li>
-				<li><a href="#section2" class="hover:text-gray-400">Seção 2</a></li>
-				<li><a href="#section3" class="hover:text-gray-400">Seção 3</a></li>
-				<li><a href="#section4" class="hover:text-gray-400">Seção 4</a></li>
+				<?php
+				$menu_items = wp_get_nav_menu_items('primary-header');
+
+				if ($menu_items) {
+					foreach ($menu_items as $item) {
+						echo sprintf(
+							'<li><a href="%s" class="hover:text-gray-400">%s</a></li>',
+							esc_url($item->url),
+							esc_html($item->title)
+						);
+					}
+				}
+				?>
 			</ul>
 		</div>
 

@@ -196,24 +196,8 @@ foreach ($tours as $tour) {
     <h2 class="text-center text-3xl font-bold mb-6 uppercase">Fale Conosco</h2>
     <div class="flex flex-col md:flex-row items-center md:items-start">
         <!-- Formulário à esquerda -->
-        <div class="w-full md:w-1/2 md:pr-4">
-            <form class="bg-white shadow-md rounded px-8 py-6 space-y-4">
-                <div class="flex flex-col">
-                    <label for="name" class="mb-2 text-sm font-semibold text-black">Nome</label>
-                    <input type="text" id="name" placeholder="Seu nome" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="flex flex-col">
-                    <label for="email" class="mb-2 text-sm font-semibold text-black">Email</label>
-                    <input type="email" id="email" placeholder="Seu email" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="flex flex-col">
-                    <label for="message" class="mb-2 text-sm font-semibold text-black">Mensagem</label>
-                    <textarea id="message" rows="4" placeholder="Digite sua mensagem" class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:border-blue-500"></textarea>
-                </div>
-                <button type="submit" class="bg-green text-white font-semibold py-2 px-4 rounded hover:bg-[#027a36]">
-                    Enviar
-                </button>
-            </form>
+        <div class="contact-form w-full md:w-1/2 md:pr-4">
+            <?php echo do_shortcode('[wpforms id="84" title="false"]'); ?>
         </div>
         <!-- Imagem à direita -->
         <div class="w-full md:w-1/2 mt-6 md:mt-0 md:pl-4 flex justify-center">

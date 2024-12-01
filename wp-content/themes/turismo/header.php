@@ -41,9 +41,19 @@
 				</a>
 			</div>
 			<div class="hidden md:flex space-x-4">
-				<a href="#" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">About</a>
-				<a href="#" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">Services</a>
-				<a href="#" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">Contact</a>
+				<?php
+				$menu_items = wp_get_nav_menu_items('primary-header');
+
+				if ($menu_items) {
+					foreach ($menu_items as $item) {
+						echo sprintf(
+							'<a href="%s" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">%s</a>',
+							esc_url($item->url),
+							esc_html($item->title)
+						);
+					}
+				}
+				?>
 			</div>
 			<button
 				id="menu-btn"
@@ -52,8 +62,18 @@
 			</button>
 		</div>
 		<div id="menu" class="hidden md:hidden flex flex-col space-y-2 mt-4 px-8">
-			<a href="#" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">About</a>
-			<a href="#" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">Services</a>
-			<a href="#" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">Contact</a>
+			<?php
+			$menu_items = wp_get_nav_menu_items('primary-header');
+
+			if ($menu_items) {
+				foreach ($menu_items as $item) {
+					echo sprintf(
+						'<a href="%s" class="text-lg font-navbar text-white uppercase hover:text-[#029344] underline-effect">%s</a>',
+						esc_url($item->url),
+						esc_html($item->title)
+					);
+				}
+			}
+			?>
 		</div>
 	</nav>
