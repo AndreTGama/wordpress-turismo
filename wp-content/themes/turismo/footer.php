@@ -1,4 +1,25 @@
+<?php
+$argsContact = array(
+	'post_type'      => 'contact_whatsapp',
+	'posts_per_page' => 1,
+	'orderby'        => 'date',
+	'order'          => 'ASC',
+);
+
+$contact = get_posts($argsContact);
+$cellphone = get_field('cellphone', $contact[0]->ID);
+$cellphoneFormat = "+55 (" . substr($cellphone, 2, 2) . ") " . substr($cellphone, 4, 5) . "-" . substr($cellphone, 9);
+$message = get_field('message', $contact[0]->ID);
+?>
+
 <footer class="text-white py-6">
+	<a href="https://wa.me/<?= $cellphone ?>?text=<?= $message ?>"
+		class="whatsapp-float"
+		target="_blank">
+		<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+			alt="WhatsApp" />
+	</a>
+
 	<div class="container mx-auto flex flex-col md:flex-row justify-between items-center md:items-start">
 		<div class="flex flex-col mb-4 md:mb-0 text-center md:text-left">
 			<h3 class="text-lg font-semibold mb-2">Redes Sociais</h3>
@@ -34,7 +55,7 @@
 		<div class="flex flex-col mb-4 md:mb-0 text-center md:text-left">
 			<h3 class="text-lg font-semibold mb-2">Contato</h3>
 			<p>Email: contato@exemplo.com</p>
-			<p>Telefone: (11) 99999-9999</p>
+			<p>Telefone: <?= $cellphoneFormat ?> </p>
 		</div>
 	</div>
 </footer>
