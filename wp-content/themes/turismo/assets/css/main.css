@@ -122,3 +122,8 @@ footer {
 .wp-contact-form-button:hover {
     background-color: #01411e !important;
 }
+
+.search-results {
+    padding: 50px;
+    height: 100%;
+}
