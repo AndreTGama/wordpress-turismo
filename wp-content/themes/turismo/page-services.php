@@ -1,18 +1,14 @@
 <?php
-
 /**
  * Template Name: Services
  */
 get_header();
 
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-
 $argsTours = array(
     'post_type'      => 'servicos',
-    'posts_per_page' => 1, // Pode ser ajustado para o número de posts por página que você deseja
+    'posts_per_page' => -1,
     'orderby'        => 'date',
     'order'          => 'DESC',
-    'paged'          => $paged, // A paginação está sendo aplicada corretamente aqui
 );
 
 // Query de serviços
@@ -33,6 +29,7 @@ if ($toursQuery->have_posts()) :
         $trip = [
             "id" => get_the_ID(),
             "name" => get_field('name') ?? get_the_title(),
+            "value" => get_field('value') ?? '',
             "description" => get_field('description_service') ?? '',
             "type" => get_field('type_service') ?? '',
             "images" => $gallery,
@@ -45,6 +42,7 @@ if ($toursQuery->have_posts()) :
 else :
     echo 'Nenhum serviço encontrado.';
 endif;
+
 ?>
 <section id="header-trips" class="flex flex-col md:flex-row gap-8 p-6 relative">
     <div class="overlay"></div>
@@ -76,95 +74,86 @@ endif;
     </div>
 
     <div class="w-full md:w-3/4 p-4">
-        <?php
-        foreach ($toursArray as $tour) :
-        ?>
-            <div class="mb-4 relative flex flex-col md:flex-row w-full p-4 bg-white rounded-lg shadow-md" data-category="<?= esc_attr($tour['type']); ?>">
-                <div class="md:w-1/3 w-full">
-                    <img src="<?= esc_url($tour['img']); ?>" alt="<?= esc_attr($tour['name']); ?>" class="w-full h-full object-cover rounded-lg" />
-                </div>
-                <div class="md:w-2/3 w-full flex flex-col justify-between p-4">
-                    <div>
-                        <div class="badge badge-bg font-badge mb-2"><?= esc_html($tour['type']); ?></div>
-                        <h5 class="font-bold text-lg mb-2"><?= esc_html($tour['name']); ?></h5>
-                        <p class="description-trips text-gray-700 mb-4"><?= esc_html($tour['description']); ?></p>
-                    </div>
-                    <a href="<?= esc_url($tour['link']); ?>" class="text-blue-500 font-bold hover:underline">Ver Mais</a>
-                </div>
-            </div>
-        <?php endforeach; ?>
+        <div id="trip-cards"></div>
 
         <!-- Paginação -->
-        <div id="pagination" class="text-center mt-6">
-            <?php
-            $big = 999999999;
-            $pagination_links = paginate_links([
-                'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
-                'format' => 'page/%#%',
-                'current' => max(1, get_query_var('paged')),
-                'total' => $toursQuery->max_num_pages,
-                'prev_text' => 'Anterior',
-                'next_text' => 'Próximo',
-                'type' => 'array',
-            ]);
-
-            if ($pagination_links) :
-                echo '<div class="pagination flex justify-center gap-2">';
-                foreach ($pagination_links as $link) :
-                    echo '<button class="pagination-btn bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">' . $link . '</button>';
-                endforeach;
-                echo '</div>';
-            endif;
-            ?>
-        </div>
+        <div id="pagination" class="text-center mt-6"></div>
     </div>
 </section>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const searchInput = document.getElementById("search-input");
-        const clearFiltersBtn = document.getElementById("clear-filters");
-        const checkboxes = document.querySelectorAll(".filter-checkbox");
-        const cards = document.querySelectorAll("[data-category]");
+        const toursArray = <?= json_encode($toursArray); ?>;
+        const itemsPerPage = 10;
+        let currentPage = 1;
 
-        searchInput.addEventListener("input", () => {
-            filterCards();
-        });
+        const tripContainer = document.getElementById("trip-cards");
+        const paginationContainer = document.getElementById("pagination");
 
-        clearFiltersBtn.addEventListener("click", () => {
-            searchInput.value = "";
-            checkboxes.forEach((checkbox) => {
-                checkbox.checked = false;
+        const renderTrips = (page) => {
+            tripContainer.innerHTML = "";
+
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const currentTrips = toursArray.slice(start, end);
+
+            currentTrips.forEach(tour => {
+                const tripCard = `
+                    <div class="mb-4 relative flex flex-col md:flex-row w-full p-4 bg-white rounded-lg shadow-md" data-category="${tour.type}">
+                        <div class="md:w-1/3 w-full">
+                            <img src="${tour.img}" alt="${tour.name}" class="w-full h-full object-cover rounded-lg" />
+                        </div>
+                        <div class="md:w-2/3 w-full flex flex-col justify-between p-4">
+                            <div>
+                                <div class="badge badge-bg font-badge mb-2">${tour.type}</div>
+                                <h5 class="font-bold text-lg mb-2">${tour.name}</h5>
+                                <p class="description-trips text-gray-700 mb-4">${tour.description}</p>
+                            </div>
+                            <a href="${tour.link}" class="text-blue-500 font-bold hover:underline">Ver Mais</a>
+                        </div>
+                    </div>
+                `;
+                tripContainer.insertAdjacentHTML("beforeend", tripCard);
             });
-            filterCards();
-        });
 
-        checkboxes.forEach((checkbox) => {
-            checkbox.addEventListener("change", () => {
-                filterCards();
-            });
-        });
+            renderPagination();
+        };
 
-        function filterCards() {
-            const searchText = searchInput.value.toLowerCase();
-            const selectedCategories = Array.from(checkboxes)
-                .filter((checkbox) => checkbox.checked)
-                .map((checkbox) => checkbox.value);
+        const renderPagination = () => {
+            paginationContainer.innerHTML = "";
 
-            cards.forEach((card) => {
-                const title = card.querySelector("h5")?.textContent.toLowerCase() || "";
-                const category = card.getAttribute("data-category").toLowerCase();
+            const totalPages = Math.ceil(toursArray.length / itemsPerPage);
 
-                const matchesSearch = title.includes(searchText);
-                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category);
+            if (totalPages > 1) {
+                const createPageButton = (page, label) => {
+                    const button = document.createElement("button");
+                    button.textContent = label || page;
+                    button.className = `pagination-btn bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 ${page === currentPage ? "bg-blue-700" : ""}`;
+                    button.style.margin = "0 5px";
+                    button.addEventListener("click", () => {
+                        currentPage = page;
+                        renderTrips(currentPage);
+                    });
+                    paginationContainer.appendChild(button);
+                };
 
-                if (matchesSearch && matchesCategory) {
-                    card.classList.remove("hidden");
-                } else {
-                    card.classList.add("hidden");
+                createPageButton(1, "Primeira");
+                if (currentPage > 2) {
+                    paginationContainer.insertAdjacentHTML("beforeend", "<span>...</span>");
                 }
-            });
-        }
+
+                for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
+                    createPageButton(i);
+                }
+
+                if (currentPage < totalPages - 1) {
+                    paginationContainer.insertAdjacentHTML("beforeend", "<span>...</span>");
+                }
+                createPageButton(totalPages, "Última");
+            }
+        };
+
+        renderTrips(currentPage);
     });
 </script>
 
