@@ -161,6 +161,11 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 					},
 				};
 
+				// Hidden class is used only for initial get connections request when connections are not set yet.
+				if ( custom.data.task !== 'connections_get' ) {
+					$holder.find( '.wpforms-builder-provider-title-spinner' ).removeClass( 'hidden' );
+				}
+
 				custom.data = app.ajax._mergeData( provider, custom.data || {} );
 				$.extend( params, custom );
 
@@ -717,14 +722,17 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 			 *
 			 * @since 1.4.7
 			 * @since 1.5.9 Added a new parameter - provider.
+			 * @since 1.9.2.3 Added the ability to set default connection name.
 			 *
 			 * @param {string} provider Current provider slug.
 			 */
 			connectionAdd( provider ) {
+				const defaultValue = app.ui.getDefaultConnectionName( provider ).trim();
+
 				$.confirm( {
 					title: false,
 					content: wpforms_builder_providers.prompt_connection.replace( /%type%/g, 'connection' ) +
-						'<input autofocus="" type="text" id="wpforms-builder-provider-connection-name" placeholder="' + wpforms_builder_providers.prompt_placeholder + '">' +
+						'<input ' + ( defaultValue === '' ? ' autofocus=""' : '' ) + 'type="text" id="wpforms-builder-provider-connection-name" placeholder="' + wpforms_builder_providers.prompt_placeholder + '" value="' + defaultValue + '">' +
 						'<p class="error">' + wpforms_builder_providers.error_name + '</p>',
 					icon: 'fa fa-info-circle',
 					type: 'blue',
@@ -747,6 +755,15 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 						cancel: {
 							text: wpforms_builder.cancel,
 						},
+					},
+					onContentReady() {
+						// Update autofocus to be at the end of string when the default value is set.
+						const input = this.$content.find( '#wpforms-builder-provider-connection-name' )[ 0 ];
+
+						if ( defaultValue ) {
+							input.setSelectionRange( defaultValue.length, defaultValue.length );
+							input.focus();
+						}
 					},
 				} );
 			},
@@ -793,6 +810,47 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 						},
 					},
 				} );
+			},
+
+			/**
+			 * Get the default name for a new connection.
+			 *
+			 * @since 1.9.3
+			 *
+			 * @param {string} provider Current provider slug.
+			 *
+			 * @return {string} Returns the default name for a new connection.
+			 */
+			getDefaultConnectionName( provider ) {
+				const providerClass = app.getProviderClass( provider );
+
+				// Check if the provider has a method to set the custom connection name.
+				if ( typeof providerClass?.setDefaultModalValue === 'function' ) {
+					return providerClass.setDefaultModalValue();
+				}
+
+				const providerName = app.getProviderHolder( provider ).data( 'provider-name' );
+				const numberOfConnections = app.ui.getCountConnectionsOf( provider );
+				const defaultName = `${ providerName } ${ wpforms_builder.connection_label }`;
+
+				if ( numberOfConnections === 0 ) {
+					return defaultName;
+				}
+
+				return `${ defaultName } #${ numberOfConnections + 1 }`;
+			},
+
+			/**
+			 * Get the number of connections for the provider.
+			 *
+			 * @since 1.9.3
+			 *
+			 * @param {string} provider Current provider slug.
+			 *
+			 * @return {number} Returns the number of connections for the provider.
+			 */
+			getCountConnectionsOf( provider ) {
+				return app.getProviderHolder( provider ).find( '.wpforms-builder-provider-connection' ).length;
 			},
 
 			/**
@@ -985,6 +1043,31 @@ WPForms.Admin.Builder.Providers = WPForms.Admin.Builder.Providers || ( function(
 		 */
 		getProviderHolder( provider ) {
 			return $( '#' + provider + '-provider' );
+		},
+
+		/**
+		 * Get a provider JS object.
+		 *
+		 * @since 1.9.2.3
+		 * @since 1.9.3 Added support for "-" in provider names.
+		 *
+		 * @param {string} provider Provider name.
+		 *
+		 * @return {Object|null} Return provider object or null.
+		 */
+		getProviderClass( provider ) {
+			// Convert part of the provider name to uppercase.
+			const upperProviderPart = ( providerPart ) => (
+				providerPart.charAt( 0 ).toUpperCase() + providerPart.slice( 1 )
+			);
+
+			// Convert provider name to a class name.
+			const getClassName = provider.split( '-' ).map( upperProviderPart ).join( '' );
+
+			if ( typeof WPForms.Admin.Builder.Providers[ getClassName ] === 'undefined' ) {
+				return null;
+			}
+			return WPForms.Admin.Builder.Providers[ getClassName ];
 		},
 	};
 

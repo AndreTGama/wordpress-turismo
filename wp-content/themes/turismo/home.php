@@ -30,7 +30,7 @@ foreach ($tours as $tour) {
         "description" => get_field('description', $tour->ID) ?? '',
         "images" => $gallery,
         "img" => $gallery[0] ?? '',
-        "link" => home_url('/servicos/' . $tour->post_name),
+        "link" => home_url('/passeios/' . $tour->post_name),
     ];
 
     array_push($toursArray, $trip);
@@ -108,7 +108,7 @@ foreach ($tours as $tour) {
             <?php endforeach; ?>
         </div>
         <a
-            href="/servicos"
+            href="/passeios"
             class="mt-4 bg-green text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition duration-300">
             Ver todos
         </a>

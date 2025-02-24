@@ -217,6 +217,19 @@ class WPForms_Process {
 		 */
 		$this->form_data = (array) apply_filters( 'wpforms_process_before_form_data', wpforms_decode( $form->post_content ), $entry );
 
+		if ( ! empty( $this->form_data['settings']['ajax_submit'] ) && ! $this->is_valid_ajax_submit_action() ) {
+			wpforms_log(
+				'Attempt to submit corrupted post data.',
+				wp_unslash( $_POST ),
+				[
+					'type'    => [ 'error', 'entry' ],
+					'form_id' => $this->form_data['id'],
+				]
+			);
+
+			return;
+		}
+
 		$store_spam_entries = ! empty( $this->form_data['settings']['store_spam_entries'] );
 
 		/**
@@ -896,9 +909,6 @@ class WPForms_Process {
 		if ( ! $enabled || $duration <= 0 ) {
 			return;
 		}
-
-		// Convert seconds to milliseconds.
-		$duration *= 1000;
 
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		$start = ! empty( $_POST['start_timestamp'] ) ? absint( $_POST['start_timestamp'] ) : 0;
@@ -2023,5 +2033,17 @@ class WPForms_Process {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Validate action value for ajax form submission.
+	 *
+	 * @since 1.9.3
+	 *
+	 * @return bool
+	 */
+	private function is_valid_ajax_submit_action(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return ! empty( $_POST['action'] ) && $_POST['action'] === 'wpforms_submit';
 	}
 }
