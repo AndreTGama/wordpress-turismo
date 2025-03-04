@@ -20,6 +20,9 @@
 	<!-- Carrousel -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+	<!-- Sweet Alert -->
+	<script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js "></script>
+	<link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css " rel="stylesheet">
 	<!-- Styles -->
 	<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/assets/css/main.css">
 	<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/assets/css/navbar.css">

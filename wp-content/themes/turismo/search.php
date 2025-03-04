@@ -5,26 +5,60 @@
  */
 get_header();
 
-$query = get_search_query();
+$search = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+
+$words = explode(' ', $search);
+$meta_query = array('relation' => 'OR');
+
+foreach ($words as $word) {
+    $meta_query[] = array(
+        'key'     => 'name', 
+        'value'   => $word,
+        'compare' => 'LIKE',
+    );
+
+    $meta_query[] = array(
+        'key'     => 'description',
+        'value'   => $word,
+        'compare' => 'LIKE',
+    );
+
+    $meta_query[] = array(
+        'key'     => 'type_service',
+        'value'   => $word,
+        'compare' => 'type_service',
+    );
+}
+
 $argsTours = array(
     'post_type'      => 'servicos',
-    'posts_per_page' => -1,
+    'paged'          => $paged,
+    'posts_per_page' => 2,
     'orderby'        => 'date',
     'order'          => 'DESC',
-    'meta_query'     => array(
-        'relation' => 'OR',
-        array(
-            'key'     => 'name', // Nome do campo ACF 'name'
-            'value'   => $query, // Valor da pesquisa
-            'compare' => 'LIKE', // Busca parcial
-        ),
-        array(
-            'key'     => 'description', // Nome do campo ACF 'description'
-            'value'   => $query, // Valor da pesquisa
-            'compare' => 'LIKE', // Busca parcial
-        ),
-    ),
+    'meta_query'     => $meta_query,
 );
+
+// $argsTours = array(
+//     'post_type'      => 'servicos',
+//     'posts_per_page' => -1,
+//     'orderby'        => 'date',
+//     'order'          => 'DESC',
+    // 'meta_query'     => array(
+    //     'relation' => 'OR',
+    //     array(
+    //         'key'     => 'name', // Nome do campo ACF 'name'
+    //         'value'   => $search, // Valor da pesquisa
+    //         'compare' => 'LIKE', // Busca parcial
+    //     ),
+    //     array(
+    //         'key'     => 'description', // Nome do campo ACF 'description'
+    //         'value'   => $search, // Valor da pesquisa
+    //         'compare' => 'LIKE', // Busca parcial
+    //     ),
+    // ),
+// );
 
 $tours = get_posts($argsTours);
 $toursArray = [];

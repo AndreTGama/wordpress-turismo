@@ -13,14 +13,22 @@ $min_value = isset($_GET['min_value']) ? intval($_GET['min_value']) : '';
 $max_value = isset($_GET['max_value']) ? intval($_GET['max_value']) : '';
 $min_capacity = isset($_GET['min_capacity']) ? intval($_GET['min_capacity']) : '';
 $max_capacity = isset($_GET['max_capacity']) ? intval($_GET['max_capacity']) : '';
-$min_duration = isset($_GET['min_duration']) ? intval($_GET['min_duration']) : '';
-$max_duration = isset($_GET['max_duration']) ? intval($_GET['max_duration']) : '';
 $tiposSelecionados = isset($_GET['type']) ? (array) $_GET['type'] : $categorias;
 
 $meta_query = array('relation' => 'AND');
 
+if ($min_value || $max_value) {
+    $value_query = array('key' => 'value', 'type' => 'NUMERIC');
+    if ($min_value) $value_query['value'][] = $min_value;
+    if ($max_value) $value_query['value'][] = $max_value;
+    if ($min_value && $max_value) $value_query['compare'] = 'BETWEEN';
+    elseif ($min_value) $value_query['compare'] = '>=';
+    elseif ($max_value) $value_query['compare'] = '<=';
+    $meta_query[] = $value_query;
+}
+
 if ($min_capacity || $max_capacity) {
-    $capacity_query = array('key' => 'capacity_service', 'type' => 'NUMERIC');
+    $capacity_query = array('key' => 'capacity', 'type' => 'NUMERIC');
     if ($min_capacity) $capacity_query['value'][] = $min_capacity;
     if ($max_capacity) $capacity_query['value'][] = $max_capacity;
     if ($min_capacity && $max_capacity) $capacity_query['compare'] = 'BETWEEN';
@@ -29,24 +37,13 @@ if ($min_capacity || $max_capacity) {
     $meta_query[] = $capacity_query;
 }
 
-if ($min_duration || $max_duration) {
-    $duration_query = array('key' => 'duration_service', 'type' => 'NUMERIC');
-    if ($min_duration) $duration_query['value'][] = $min_duration;
-    if ($max_duration) $duration_query['value'][] = $max_duration;
-    if ($min_duration && $max_duration) $duration_query['compare'] = 'BETWEEN';
-    elseif ($min_duration) $duration_query['compare'] = '>=';
-    elseif ($max_duration) $duration_query['compare'] = '<=';
-    $meta_query[] = $duration_query;
-}
 
-if ($type) {
-    $duration_query = array('key' => 'duration_service', 'type' => 'NUMERIC');
-    if ($min_duration) $duration_query['value'][] = $min_duration;
-    if ($max_duration) $duration_query['value'][] = $max_duration;
-    if ($min_duration && $max_duration) $duration_query['compare'] = 'BETWEEN';
-    elseif ($min_duration) $duration_query['compare'] = '>=';
-    elseif ($max_duration) $duration_query['compare'] = '<=';
-    $meta_query[] = $duration_query;
+if (!empty($tiposSelecionados)) {
+    $meta_query[] = array(
+        'key'     => 'type_service',
+        'value'   => $tiposSelecionados,
+        'compare' => 'IN',
+    );
 }
 
 $argsTours = array(
@@ -106,16 +103,16 @@ $toursList = $toursQuery->posts;
             <input name="search" value="<?= esc_attr($search); ?>" placeholder="Buscar por nome ou descrição" type="text" class="w-full p-2 mb-4 border rounded">
             <hr class="border mb-4">
             <label class="black font-title-small">Valor:</label>
-            <input name="min_value" type="number" value="<?= esc_attr($min_value); ?>" placeholder="Mínima" class="w-full p-2 mb-2 border rounded">
-            <input name="max_value" type="number" value="<?= esc_attr($max_value); ?>" placeholder="Máxima" class="w-full p-2 mb-4 border rounded">
+            <div class="flex flex-col md:flex-row gap-6">
+                <input name="min_value" min='0' type="number" value="<?= esc_attr($min_value); ?>" placeholder="Mínima" class="w-full p-2 mb-2 border rounded">
+                <input name="max_value" type="number" value="<?= esc_attr($max_value); ?>" placeholder="Máxima" class="w-full p-2 mb-2 border rounded">
+            </div>
             <hr class="border mb-4">
             <label class="black font-title-small">Capacidade:</label>
-            <input name="min_capacity" type="number" value="<?= esc_attr($min_capacity); ?>" placeholder="Mínima" class="w-full p-2 mb-2 border rounded">
-            <input name="max_capacity" type="number" value="<?= esc_attr($max_capacity); ?>" placeholder="Máxima" class="w-full p-2 mb-4 border rounded">
-            <hr class="border mb-4">
-            <label class="black font-title-small">Duração:</label>
-            <input name="min_duration" type="number" value="<?= esc_attr($min_duration); ?>" placeholder="Mínima" class="w-full p-2 mb-2 border rounded">
-            <input name="max_duration" type="number" value="<?= esc_attr($max_duration); ?>" placeholder="Máxima" class="w-full p-2 mb-4 border rounded">
+            <div class="flex flex-col md:flex-row gap-6">
+                <input name="min_capacity" min='0' type="number" value="<?= esc_attr($min_capacity); ?>" placeholder="Mínima" class="w-full p-2 mb-2 border rounded">
+                <input name="max_capacity" type="number" value="<?= esc_attr($max_capacity); ?>" placeholder="Máxima" class="w-full p-2 mb-2 border rounded">
+            </div>
             <hr class="border mb-4">
             <label class="black font-title-small">Categoria</label>
             <?php foreach ($categorias as $categoria) : ?>
@@ -141,6 +138,7 @@ $toursList = $toursQuery->posts;
                     </div>
                     <div class="md:w-2/3 w-full flex flex-col justify-between p-4">
                         <div>
+                            <div class="white text-xl font-semibold mb-4 badge-big-bg">R$ <?= get_field('value', $tour->ID); ?></div>
                             <div class="badge badge-bg font-badge mb-2"><?= get_field('type_service', $tour->ID); ?></div>
                             <h5 class="font-bold text-lg mb-2"><?= $tour->post_title; ?></h5>
                             <p class="description-trips text-gray-700 mb-4"><?= get_field('description_service', $tour->ID); ?></p>
@@ -158,6 +156,51 @@ $toursList = $toursQuery->posts;
     <?php endif; ?>
 
 </section>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function(event) {
+            let minValue = parseInt(document.querySelector("input[name='min_value']").value) || 0;
+            let maxValue = parseInt(document.querySelector("input[name='max_value']").value) || 0;
+            let minCapacity = parseInt(document.querySelector("input[name='min_capacity']").value) || 0;
+            let maxCapacity = parseInt(document.querySelector("input[name='max_capacity']").value) || 0;
+
+            if (minValue < 0 || maxValue < 0 || minCapacity < 0 || maxCapacity < 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Os valores não podem ser negativos.',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar'
+                })
+                event.preventDefault();
+                return;
+            }
+
+            if (minValue > maxValue && maxValue !== 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'O valor mínimo não pode ser maior que o valor máximo.',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar'
+                })
+                event.preventDefault();
+                return;
+            }
+
+            if (minCapacity > maxCapacity && maxCapacity !== 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'A capacidade mínima não pode ser maior que a capacidade máxima.',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar'
+                })
+                event.preventDefault();
+                return;
+            }
+        });
+    });
+</script>
 <?php wp_reset_postdata(); ?>
 
 <?php get_footer(); ?>

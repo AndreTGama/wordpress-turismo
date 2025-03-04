@@ -108,7 +108,7 @@ foreach ($tours as $tour) {
             <?php endforeach; ?>
         </div>
         <a
-            href="/passeios"
+            href="/nossas-ofertas"
             class="mt-4 bg-green text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition duration-300">
             Ver todos
         </a>
@@ -215,7 +215,7 @@ foreach ($tours as $tour) {
     searchButton.addEventListener('click', function() {
         const query = searchInput.value.trim();
         if (query) {
-            window.location.href = `<?php echo home_url('/consulta'); ?>?s=${encodeURIComponent(query)}`;
+            window.location.href = `<?php echo home_url('/consulta'); ?>?search=${encodeURIComponent(query)}`;
         } else {
             alert('Por favor, insira um termo de pesquisa.');
         }

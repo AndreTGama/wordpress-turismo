@@ -24,4 +24,3 @@ function get_first_image($post_id, $default = '') {
 
     return esc_url($default);
 }
-
